@@ -1,7 +1,11 @@
+plugins {
+  id 'net.researchgate.release' version '2.0.2'
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'maven'
 
-version = '1.0.0'
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
 
@@ -36,3 +40,18 @@ repositories {
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.3.2'
 }
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: "http://localhost:8081/nexus/content/repositories/snapshots/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+            repository(url: "http://localhost:8081/nexus/content/repositories/releases/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+        }
+    }
+}
+
+createReleaseTag.dependsOn uploadArchives
